@@ -9,7 +9,7 @@ define("DEL_DECOR", "\x1b[0m");
 define("USER_MSG_DECOR", "\x1b[34;47m");  //blue text with white background
 define("NEW_LINE", "\n");
 
-($argc != 2) ? $name = 'Anonymous': $name = $argv[1];
+$name = ($argc != 2) ? 'Anonymous': $argv[1];
 
 printf('%1$s%4$s%2$s, buy an elephant!!!%3$s', USER_NAME_DECOR, DEL_DECOR, NEW_LINE, $name );
 $userMsg = trim(fgets(STDIN));
