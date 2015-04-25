@@ -1,5 +1,4 @@
 #!/usr/bin/php5
-
 <?php
 
 ($argc <= 2) || die ("Please, enter only one name as parameter!!!\n");
@@ -15,9 +14,8 @@ printf('%1$s%4$s%2$s, buy an elephant!!!%3$s', USER_NAME_DECOR, DEL_DECOR, NEW_L
 $userMsg = trim(fgets(STDIN));
 
 $str = '%1$s%5$s%3$s, every can say %2$s"%6$s"%3$s and you take and buy an elephant!!!%4$s';
-$message = sprintf($str, USER_NAME_DECOR, USER_MSG_DECOR, DEL_DECOR, NEW_LINE, '%1$s', '%2$s');
+$message = sprintf($str, USER_NAME_DECOR, USER_MSG_DECOR, DEL_DECOR, NEW_LINE, $name, '%1$s');
 while (strcasecmp($userMsg, 'exit') !== 0){
-    printf($message, $name, $userMsg);
+    printf($message, $userMsg);
     $userMsg = trim(fgets(STDIN));
 }
-?>
