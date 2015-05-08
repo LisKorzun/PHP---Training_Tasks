@@ -2,12 +2,18 @@
 <?php
 
 $screenSize = getScreenSize();
-
 define("NEW_LINE", "\n");
+define("EXIT_KEY", 27);
 define("CALENDAR_WIDTH", 24);
-define("PADDING_ROW", str_repeat(' ',($screenSize['screen']['width']-CALENDAR_WIDTH)/2));
-define("PADDING_COL", str_repeat(NEW_LINE,($screenSize['screen']['height']-9)/2));
-define("DAYS_OF_WEEK", "Mo Tu We Th Fr Sa Su");
+define("PADDING_ROW", ($screenSize['screen']['width'] - CALENDAR_WIDTH) / 2);
+define("PADDING_COL", ($screenSize['screen']['height'] - 9) / 2);
+define("DAYS_OF_WEEK", " Mo Tu We Th Fr Sa Su");
+
+$today = getdate();
+define("TODAY_MONTH", $today['mon']);
+$counterMonth = TODAY_MONTH;
+define("TODAY_YEAR", $today['year']);
+$counterYear = TODAY_YEAR;
 
 class Month
 {
@@ -24,25 +30,25 @@ class Month
         $this->year = $year;
     }
 
-    public function generate()
+    public function generateTitle()
+    {
+        return " ←→ " . date("F", mktime(0, 0, 0, $this->month, 1, 2000)) . ' ' . $this->year . " ↑↓ ";
+    }
+
+    public function generateCalendar()
     {
         $col = 7;
         $counter = 1;
-        $monthName = date("F", mktime(0, 0, 0, $this->month, 1, 2000));
-        $padding = CALENDAR_WIDTH - (strlen($monthName) + 11);
-        $month = PADDING_COL.PADDING_ROW. str_repeat(' ', floor($padding/2))."←→ ".$monthName.' '.$this->year." ↑↓".NEW_LINE;
-        $month .= PADDING_ROW.str_repeat('.', CALENDAR_WIDTH);
-        $month .= NEW_LINE . PADDING_ROW . '| ' . DAYS_OF_WEEK . ' |' . NEW_LINE . PADDING_ROW . '|';
-        if ($this->firstDay != 1) {
+        $month = '';
+        if ($this->firstDay > 1) {
             $month .= str_repeat('   ', $this->firstDay - 1);
             for ($i = $this->firstDay; $i <= 7; $i++) {
                 $month .= '  ' . $counter;
                 $counter++;
             }
-            $month .= ' |' . NEW_LINE;
+            $month .= NEW_LINE;
         }
         while ($counter < $this->numberOfDays) {
-            $month .= PADDING_ROW.'|';
             for ($i = 0; $i < $col; $i++) {
                 if ($counter <= $this->numberOfDays) {
                     ($counter < 10) ? $month .= '  ' . $counter : $month .= ' ' . $counter;
@@ -54,27 +60,59 @@ class Month
                     break 1;
                 }
             }
-            $month .= ' |' . NEW_LINE;
+            $month .= NEW_LINE;
         }
-        $month .= PADDING_ROW . str_repeat('.', CALENDAR_WIDTH) . NEW_LINE;
-        return $month;
+        $monthArr = explode(NEW_LINE, rtrim($month));
+        return $monthArr;
     }
 }
 
-$today = getdate();
-$todayMonth = $today['mon'];
-define("TODAY_MONTH", $todayMonth);
-$todayYear = $today['year'];
-define("TODAY_YEAR", $todayYear);
-$m = new Month(4,2015);
-
-echo `clear`;
-
-print $m->generate();
-
-function getScreenSize() {
-        $settings['screen']['width'] = exec('tput cols');
-        $settings['screen']['height'] = exec('tput lines');
-    return $settings;
+function printCalendar($m, $y){
+    $m = new Month($m, $y);
+    $small = ncurses_newwin(9, 26, PADDING_COL, PADDING_ROW);
+    ncurses_wborder($small, 0, 0, 0, 0, 0, 0, 0, 0);
+    ncurses_attron(NCURSES_A_REVERSE);
+    ncurses_mvwaddstr($small, 0, 1, $m->generateTitle());
+    ncurses_attroff(NCURSES_A_REVERSE);
+    ncurses_mvwaddstr($small, 2, 2, DAYS_OF_WEEK);
+    $calendar = $m->generateCalendar();
+    for ($i = 0; $i < count($calendar); $i++) {
+        $out = $calendar[$i];
+        ncurses_mvwaddstr($small, 3 + $i, 2, $out);
+    }
+    ncurses_wrefresh($small);
 }
 
+ncurses_init();
+ncurses_clear();
+//$fullscreen = ncurses_newwin ( 0, 0, 0, 0);
+printCalendar($counterMonth, $counterYear);
+while (true) {
+    $pressed = ncurses_getch();
+    if ($pressed == EXIT_KEY) {
+        break;
+    } elseif ($pressed == NCURSES_KEY_RIGHT) {
+        $counterMonth++;
+       printCalendar($counterMonth, $counterYear);
+    }
+    elseif ($pressed == NCURSES_KEY_LEFT) {
+        $counterMonth--;
+        printCalendar($counterMonth, $counterYear);
+    }
+    elseif ($pressed == NCURSES_KEY_UP) {
+        $counterYear++;
+        printCalendar($counterMonth, $counterYear);
+    }
+    elseif ($pressed == NCURSES_KEY_DOWN) {
+        $counterYear--;
+        printCalendar($counterMonth, $counterYear);
+    }
+}
+ncurses_end();
+
+function getScreenSize()
+{
+    $settings['screen']['width'] = exec('tput cols');
+    $settings['screen']['height'] = exec('tput lines');
+    return $settings;
+}
