@@ -5,9 +5,13 @@ $screenSize = getScreenSize();
 define("NEW_LINE", "\n");
 define("EXIT_KEY", 27);
 define("CALENDAR_WIDTH", 24);
+define("CALENDAR_HEIGHT", 9);
 define("PADDING_ROW", ($screenSize['screen']['width'] - CALENDAR_WIDTH) / 2);
-define("PADDING_COL", ($screenSize['screen']['height'] - 9) / 2);
+define("PADDING_COL", ($screenSize['screen']['height'] - (CALENDAR_HEIGHT+4)) / 2);
 define("DAYS_OF_WEEK", " Mo Tu We Th Fr Sa Su");
+define("CHANGE_MONTH", "To change Month, please, press ← or →");
+define("CHANGE_YEAR", "To change Year, please, press ↑ or ↓");
+define("PADDING_ROW_LEGEND", ($screenSize['screen']['width'] - max(array(strlen(CHANGE_MONTH) - 4, strlen(CHANGE_YEAR) - 4))) / 2);
 
 $today = getdate();
 define("TODAY_MONTH", $today['mon']);
@@ -93,10 +97,20 @@ class Month
     }
 }
 
+function printLegendForCalendar()
+{
+    $widthLegend = max(array(strlen(CHANGE_MONTH), strlen(CHANGE_YEAR)));
+    $legend = ncurses_newwin(4, $widthLegend, PADDING_COL + CALENDAR_HEIGHT, PADDING_ROW_LEGEND);
+    ncurses_wborder($legend, 0, 0, 0, 0, 0, 0, 0, 0);
+    ncurses_mvwaddstr($legend, 1, 2, CHANGE_MONTH);
+    ncurses_mvwaddstr($legend, 2, 2, CHANGE_YEAR);
+    ncurses_wrefresh($legend);
+}
+
 function printCalendar($m, $y)
 {
     $m = new Month($m, $y);
-    $small = ncurses_newwin(9, 26, PADDING_COL, PADDING_ROW);
+    $small = ncurses_newwin(CALENDAR_HEIGHT, CALENDAR_WIDTH + 2, PADDING_COL, PADDING_ROW);
     ncurses_wborder($small, 0, 0, 0, 0, 0, 0, 0, 0);
     ncurses_attron(NCURSES_A_REVERSE);
     ncurses_mvwaddstr($small, 0, 1, $m->generateTitle());
@@ -108,6 +122,7 @@ function printCalendar($m, $y)
         ncurses_mvwaddstr($small, 3 + $i, 2, $out);
     }
     ncurses_wrefresh($small);
+    printLegendForCalendar();
 }
 
 function getScreenSize()
