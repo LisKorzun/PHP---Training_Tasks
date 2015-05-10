@@ -11,7 +11,7 @@ define("PADDING_COL", ($screenSize['screen']['height'] - (CALENDAR_HEIGHT+4)) / 
 define("DAYS_OF_WEEK", " Mo Tu We Th Fr Sa Su");
 define("CHANGE_MONTH", "To change Month, please, press ← or →");
 define("CHANGE_YEAR", "To change Year, please, press ↑ or ↓");
-define("PADDING_ROW_LEGEND", ($screenSize['screen']['width'] - max(array(strlen(CHANGE_MONTH) - 4, strlen(CHANGE_YEAR) - 4))) / 2);
+define("PADDING_ROW_LEGEND", ($screenSize['screen']['width'] - max(array(strlen(CHANGE_MONTH) - 3, strlen(CHANGE_YEAR) - 3))) / 2);
 
 $today = getdate();
 define("TODAY_MONTH", $today['mon']);
@@ -24,7 +24,7 @@ ncurses_clear();
 ncurses_curs_set(0);
 printCalendar($counterMonth, $counterYear);
 while (true) {
-    $pressed = ncurses_getch();
+    $pressed = getch_nonblock(1000000);
     switch ($pressed) {
         case EXIT_KEY:
             break 2;
@@ -95,6 +95,20 @@ class Month
         $monthArr = explode(NEW_LINE, rtrim($month));
         return $monthArr;
     }
+}
+
+/**
+ * Функция необходима для для решения проблем с блокированием потока для ncurses_getch
+ * http://php.net/manual/en/function.ncurses-getch.php
+ *
+ * @param $timeout
+ * @return int|null
+ */
+function getch_nonblock($timeout) {
+    $read = array(STDIN);
+    $null = null;    // stream_select() uses references, thus variables are necessary for the first 3 parameters
+    if(stream_select($read,$null,$null,floor($timeout / 1000000),$timeout % 1000000) != 1) return null;
+    return ncurses_getch();
 }
 
 function printLegendForCalendar()
