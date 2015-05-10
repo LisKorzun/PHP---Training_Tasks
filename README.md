@@ -1,7 +1,7 @@
 Training Tasks
 =================================
 
-BRANCHES:
+BRANCH:
 
 task-01  -  "Buy elephant"
 =================================
@@ -14,3 +14,21 @@ Task:
 Solution:
 
 https://github.com/LisKorzun/PHP---Training_Tasks/blob/task-01/Task_01/elephant.php
+
+BRANCH:
+
+task-02  -  "Calendar"
+=================================
+
+Task:
+
+Выввести календарь в центре чистой консоли ( т.е очистить консоль и посередине вывести календарь ). Возле месяца и года в шапке календаря вывести стрелки вверх- вниз  / вправо-влево, а под рамкой вывести текст с пояснением к этим стрелкам.  Реализовать листание с помощью стрелок - право-лево - меняет месяц, верх-низ меняет год.
+
+Solution:
+
+https://github.com/LisKorzun/PHP---Training_Tasks/blob/task-02/Task_02/calendar.php
+
+ScreenShot:
+
+https://yadi.sk/i/LpyttUQigXyUh
+
