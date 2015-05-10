@@ -15,6 +15,32 @@ $counterMonth = TODAY_MONTH;
 define("TODAY_YEAR", $today['year']);
 $counterYear = TODAY_YEAR;
 
+ncurses_init();
+ncurses_clear();
+ncurses_curs_set(0);
+printCalendar($counterMonth, $counterYear);
+while (true) {
+    $pressed = ncurses_getch();
+    switch ($pressed) {
+        case EXIT_KEY:
+            break 2;
+        case NCURSES_KEY_RIGHT:
+            $counterMonth++;
+            break;
+        case NCURSES_KEY_LEFT:
+            $counterMonth--;
+            break;
+        case NCURSES_KEY_UP:
+            $counterYear++;
+            break;
+        case NCURSES_KEY_DOWN:
+            $counterYear--;
+            break;
+    }
+    printCalendar($counterMonth, $counterYear);
+}
+ncurses_end();
+
 class Month
 {
     private $firstDay;
@@ -67,7 +93,8 @@ class Month
     }
 }
 
-function printCalendar($m, $y){
+function printCalendar($m, $y)
+{
     $m = new Month($m, $y);
     $small = ncurses_newwin(9, 26, PADDING_COL, PADDING_ROW);
     ncurses_wborder($small, 0, 0, 0, 0, 0, 0, 0, 0);
@@ -82,33 +109,6 @@ function printCalendar($m, $y){
     }
     ncurses_wrefresh($small);
 }
-
-ncurses_init();
-ncurses_clear();
-//$fullscreen = ncurses_newwin ( 0, 0, 0, 0);
-printCalendar($counterMonth, $counterYear);
-while (true) {
-    $pressed = ncurses_getch();
-    if ($pressed == EXIT_KEY) {
-        break;
-    } elseif ($pressed == NCURSES_KEY_RIGHT) {
-        $counterMonth++;
-       printCalendar($counterMonth, $counterYear);
-    }
-    elseif ($pressed == NCURSES_KEY_LEFT) {
-        $counterMonth--;
-        printCalendar($counterMonth, $counterYear);
-    }
-    elseif ($pressed == NCURSES_KEY_UP) {
-        $counterYear++;
-        printCalendar($counterMonth, $counterYear);
-    }
-    elseif ($pressed == NCURSES_KEY_DOWN) {
-        $counterYear--;
-        printCalendar($counterMonth, $counterYear);
-    }
-}
-ncurses_end();
 
 function getScreenSize()
 {
