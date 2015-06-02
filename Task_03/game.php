@@ -53,7 +53,7 @@ Class Game
         define('PADDING_LEFT', ($this->wScreen - $this->w) / 2);
     }
 
-    public function startInfo()
+    private function startInfo()
     {
         $this->infoField = ncurses_newwin(H_INFO_FIELD, W_INFO_FIELD, 0, ($this->wScreen - W_INFO_FIELD) / 2);
         ncurses_wcolor_set($this->infoField, 3);
@@ -77,7 +77,7 @@ Class Game
         }
     }
 
-    public function editSetting()
+    private function editSetting()
     {
         $this->fillField($this->infoField, 9, W_INFO_FIELD - 1, ' ');
         ncurses_mvwaddstr($this->infoField, 3, 11, 'Выберите режим стен:');
