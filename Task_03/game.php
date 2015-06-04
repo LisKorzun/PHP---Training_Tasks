@@ -5,17 +5,18 @@ define("EXIT_KEY", 27);
 define("H_INFO_FIELD", 10);
 define("W_INFO_FIELD", 48);
 
-$gamer = new Gamer();
+$gamer = new Character();
 $gamer->playGame();
+
 
 Class Game
 {
-    protected $h = 15;
-    protected $w = 40;
+    public static $h = 15;
+    public static $w = 40;
     protected $hScreen;
     protected $wScreen;
     protected $infoField;
-    protected $field;
+    public static $field;
     protected $constantMotion = true;
     protected $liquid = false;
 
@@ -25,10 +26,12 @@ Class Game
         $this->setInitialSettings();
         $this->startInfo();
         ncurses_clear();
-        $this->field = ncurses_newwin($this->h, $this->w, PADDING_TOP, PADDING_LEFT);
-        ncurses_wcolor_set($this->field, 1);
-        ncurses_wborder($this->field, 0, 0, 0, 0, 0, 0, 0, 0);
-        $this->fillField($this->field, $this->h, $this->w, '.');
+        $paddingTop = (($this->hScreen - self::$h) + H_INFO_FIELD) / 2;
+        $paddingLeft = ($this->wScreen - self::$w) / 2;
+        self::$field = ncurses_newwin(self::$h, self::$w, $paddingTop, $paddingLeft);
+        ncurses_wcolor_set(self::$field, 1);
+        ncurses_wborder(self::$field, 0, 0, 0, 0, 0, 0, 0, 0);
+        $this->fillField(self::$field, self::$h, self::$w, '.');
     }
 
     protected function fillField($field, $height, $width, $char)
@@ -49,8 +52,6 @@ Class Game
             ncurses_init_pair(1, NCURSES_COLOR_GREEN, NCURSES_COLOR_BLACK);
             ncurses_init_pair(3, NCURSES_COLOR_BLUE, NCURSES_COLOR_BLACK);
         }
-        define('PADDING_TOP', (($this->hScreen - $this->h) + H_INFO_FIELD) / 2);
-        define('PADDING_LEFT', ($this->wScreen - $this->w) / 2);
     }
 
     private function startInfo()
@@ -79,7 +80,7 @@ Class Game
 
     private function editSetting()
     {
-        $this->fillField($this->infoField, 9, W_INFO_FIELD - 1, ' ');
+        $this->fillField($this->infoField, H_INFO_FIELD - 1, W_INFO_FIELD - 1, ' ');
         ncurses_mvwaddstr($this->infoField, 3, 11, 'Выберите режим стен:');
         ncurses_mvwaddstr($this->infoField, 5, 11, '0 - твердые стены');
         ncurses_mvwaddstr($this->infoField, 6, 11, '1 - проход сквозь стены');
@@ -94,7 +95,7 @@ Class Game
                 break;
             }
         }
-        $this->fillField($this->infoField, 9, W_INFO_FIELD - 1, ' ');
+        $this->fillField($this->infoField, H_INFO_FIELD - 1, W_INFO_FIELD - 1, ' ');
         ncurses_mvwaddstr($this->infoField, 3, 11, 'Выберите режим движения:');
         ncurses_mvwaddstr($this->infoField, 5, 11, '0 - перемещение по нажатию');
         ncurses_mvwaddstr($this->infoField, 6, 11, '1 - постоянное движение');
@@ -116,7 +117,7 @@ Class Game
         $wall = ($this->liquid) ? 'прохода сквозь стены' : 'твердых стен';
         $motion = ($this->constantMotion) ? 'постоянного движения' : 'перемещения по нажатию';
         ncurses_wborder($this->infoField, 0, 0, 0, 0, 0, 0, 0, 0);
-        $this->fillField($this->infoField, 9, W_INFO_FIELD - 1, ' ');
+        $this->fillField($this->infoField, H_INFO_FIELD - 1, W_INFO_FIELD - 1, ' ');
         ncurses_mvwaddstr($this->infoField, 1, 2, 'Активен режим:');
         ncurses_mvwaddstr($this->infoField, 2, 2, $wall . ' и ' . $motion);
         ncurses_mvwaddstr($this->infoField, 4, 2, 'Текущая координата x = ' . $x);
@@ -130,18 +131,23 @@ Class Game
 
 Class Gamer extends Game
 {
-    private $y;
-    private $x;
+    const XRIGHT = 'xRight';
+    const XLEFT = 'xLeft';
+    const YUP = 'yUp';
+    const YDOWN = 'yDown';
+
+    protected $y;
+    protected $x;
     private $counter = 0;
 
     public function playGame()
     {
         parent::playGame();
-        $this->y = floor($this->h / 2);
-        $this->x = floor($this->w / 2);
-        ncurses_mvwaddstr($this->field, $this->y, $this->x, '@');
+        $this->y = floor(Game::$h / 2);
+        $this->x = floor(Game::$w / 2);
+        ncurses_mvwaddstr(Game::$field, $this->y, $this->x, '@');
         ncurses_refresh();
-        ncurses_wrefresh($this->field);
+        ncurses_wrefresh(Game::$field);
         $this->getInfo($this->x, $this->y, $this->counter);
         $flag = '';
         while (true) {
@@ -168,16 +174,16 @@ Class Gamer extends Game
                 default:
                     if ($this->constantMotion) {
                         switch ($flag) {
-                            case 'xRight':
+                            case self::XRIGHT:
                                 $this->checkRightBorder($flag);
                                 break 2;
-                            case 'xLeft':
+                            case self::XLEFT:
                                 $this->checkLeftBorder($flag);
                                 break 2;
-                            case 'yUp':
+                            case self::YUP:
                                 $this->checkTopBorder($flag);
                                 break 2;
-                            case 'yDown':
+                            case self::YDOWN:
                                 $this->checkBottomBorder($flag);
                                 break 2;
                             default:
@@ -186,26 +192,27 @@ Class Gamer extends Game
                         }
                     }
             }
-            $this->fillField($this->field, $this->h, $this->w, '.');
-            ncurses_mvwaddstr($this->field, $this->y, $this->x, '@');
+            $this->fillField(Game::$field, Game::$h, Game::$w, '.');
+            ncurses_mvwaddstr(Game::$field, $this->y, $this->x, '@');
+            static::moveCharacter();
             $this->getInfo($this->x, $this->y, $this->counter);
-            ncurses_wrefresh($this->field);
+            ncurses_wrefresh(Game::$field);
         }
         ncurses_end();
     }
 
     private function CheckRightBorder(&$flag)
     {
-        if ($this->x == $this->w - 2) {
+        if ($this->x == Game::$w - 2) {
             if ($this->liquid) {
-                $flag = 'xRight';
+                $flag = self::XRIGHT;
                 $this->x = 1;
             } else {
-                $flag = 'xLeft';
+                $flag = self::XLEFT;
                 ($this->constantMotion) ? $this->x-- : $this->x;
             }
         } else {
-            $flag = 'xRight';
+            $flag = self::XRIGHT;
             $this->x++;
         }
         return $this->x;
@@ -215,14 +222,14 @@ Class Gamer extends Game
     {
         if ($this->x == 1) {
             if ($this->liquid) {
-                $flag = 'xLeft';
-                $this->x = $this->w - 2;
+                $flag = self::XLEFT;
+                $this->x = Game::$w - 2;
             } else {
-                $flag = 'xRight';
+                $flag = self::XRIGHT;
                 ($this->constantMotion) ? $this->x++ : $this->x;
             }
         } else {
-            $flag = 'xLeft';
+            $flag = self::XLEFT;
             $this->x--;
         }
         return $this->x;
@@ -232,36 +239,89 @@ Class Gamer extends Game
     {
         if ($this->y == 1) {
             if ($this->liquid) {
-                $flag = 'yUp';
-                $this->y = $this->h - 2;
+                $flag = self::YUP;
+                $this->y = Game::$h - 2;
             } else {
-                $flag = 'yDown';
+                $flag = self::YDOWN;
                 ($this->constantMotion) ? $this->y++ : $this->y;
             }
         } else {
-            $flag = 'yUp';
+            $flag = self::YUP;
             $this->y--;
         }
         return $this->y;
     }
 
-    private function checkBottomBorder(&$flag)
+    protected function checkBottomBorder(&$flag)
     {
-        if ($this->y == $this->h - 2) {
+        if ($this->y == Game::$h - 2) {
             if ($this->liquid) {
-                $flag = 'yDown';
+                $flag = self::YDOWN;
                 $this->y = 1;
             } else {
-                $flag = 'yUp';
+                $flag = self::YUP;
                 ($this->constantMotion) ? $this->y-- : $this->y;
             }
         } else {
-            $flag = 'yDown';
+            $flag = self::YDOWN;
             $this->y++;
         }
         return $this->y;
     }
+
+    public static function moveCharacter()
+    {
+    }
 }
+
+Class Character extends Gamer
+{
+    public static $cx;
+    public static $cy;
+
+    public function __construct()
+    {
+        self::$cy = rand(1, Game::$h - 1);
+        self::$cx = rand(1, Game::$w - 1);
+    }
+
+    public static function moveCharacter()
+    {
+        ncurses_mvwaddstr(Game::$field, self::$cy, self::$cx, '*');
+        $rand = rand(1, 4);
+        switch ($rand) {
+            case 1:
+                if (self::$cx == Game::$w - 2) {
+                    self::$cx--;
+                } else {
+                    self::$cx++;
+                }
+                break 1;
+            case 2:
+                if (self::$cx == 1) {
+                    self::$cx++;
+                } else {
+                    self::$cx--;
+                }
+                break 1;
+            case 3:
+                if (self::$cy == Game::$h - 2) {
+                    self::$cy--;
+                } else {
+                    self::$cy++;
+                }
+                break 1;
+            case 4:
+                if (self::$cy == 1) {
+                    self::$cy++;
+                } else {
+                    self::$cy--;
+                }
+                break 1;
+        }
+    }
+}
+
 
 Class Utils
 {
