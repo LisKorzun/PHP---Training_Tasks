@@ -1,14 +1,14 @@
 <?php
 
-Class PursueCharacter implements Character
+Class CharacterPursue implements Character
 {
     public $x;
     public $y;
 
     public function __construct()
     {
-        $this->y = rand(1, Game::$h - 2);
-        $this->x = rand(1, Game::$w - 2);
+        $this->y = rand(1, 15 - 2);
+        $this->x = rand(1, 40 - 2);
     }
 
     public function getX()
@@ -21,28 +21,27 @@ Class PursueCharacter implements Character
         return $this->y;
     }
 
-    public function moveCharacter()
+    public function moveCharacter($h, $w, $gamerX, $gamerY)
     {
         $rangeX = [];
         $rangeY = [];
-        ncurses_mvwaddstr(Game::$field, $this->y, $this->x, '*');
         for ($i = $this->x - 5; $i < $this->x + 5; $i++) {
             $rangeX[] = $i;
         }
         for ($i = $this->y - 5; $i < $this->y + 5; $i++) {
             $rangeY[] = $i;
         }
-        if (in_array(Gamer::$x, $rangeX) AND in_array(Gamer::$y, $rangeY)) {
-            if (abs($this->x - Gamer::$x) >= abs($this->y - Gamer::$y)) {
-                ($this->x > Gamer::$x) ? $this->x-- : $this->x++;
+        if (in_array($gamerX, $rangeX) AND in_array($gamerY, $rangeY)) {
+            if (abs($this->x - $gamerX) >= abs($this->y - $gamerY)) {
+                ($this->x > $gamerX) ? $this->x-- : $this->x++;
             } else {
-                ($this->y > Gamer::$y) ? $this->y-- : $this->y++;
+                ($this->y > $gamerY) ? $this->y-- : $this->y++;
             }
         } else {
             $rand = rand(1, 4);
             switch ($rand) {
                 case 1:
-                    if ($this->x == Game::$w - 2) {
+                    if ($this->x == $w - 2) {
                         $this->x--;
                     } else {
                         $this->x++;
@@ -56,7 +55,7 @@ Class PursueCharacter implements Character
                     }
                     break 1;
                 case 3:
-                    if ($this->y == Game::$h - 2) {
+                    if ($this->y == $h - 2) {
                         $this->y--;
                     } else {
                         $this->y++;

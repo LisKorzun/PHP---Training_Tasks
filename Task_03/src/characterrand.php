@@ -1,14 +1,14 @@
 <?php
 
-Class RandCharacter implements Character
+Class CharacterRand implements Character
 {
     private $x;
     private $y;
 
     public function __construct()
     {
-        $this->y = rand(1, Game::$h - 2);
-        $this->x = rand(1, Game::$w - 2);
+        $this->y = rand(1, 15 - 2);
+        $this->x = rand(1, 40 - 2);
     }
 
     public function getX()
@@ -21,13 +21,12 @@ Class RandCharacter implements Character
         return $this->y;
     }
 
-    public function moveCharacter()
+    public function moveCharacter($h, $w, $gamerX, $gamerY)
     {
-        ncurses_mvwaddstr(Game::$field, $this->y, $this->x, '*');
         $rand = rand(1, 4);
         switch ($rand) {
             case 1:
-                if ($this->x == Game::$w - 2) {
+                if ($this->x == $w - 2) {
                     $this->x--;
                 } else {
                     $this->x++;
@@ -41,7 +40,7 @@ Class RandCharacter implements Character
                 }
                 break 1;
             case 3:
-                if ($this->y == Game::$h - 2) {
+                if ($this->y == $h - 2) {
                     $this->y--;
                 } else {
                     $this->y++;
