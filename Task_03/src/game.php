@@ -6,7 +6,7 @@ Class Game
     private $w = 40;
     private $constantMotion = true;
     private $liquid = false;
-    private $complexity = 1;
+    private $complexity = 3;
     private $painter;
     private $listener;
     private $gamer;
@@ -25,16 +25,6 @@ Class Game
     public function setGamer(Gamer $gamer)
     {
         $this->gamer = $gamer;
-    }
-
-    public function isConstantMotion()
-    {
-        return $this->constantMotion;
-    }
-
-    public function isLiquid()
-    {
-        return $this->liquid;
     }
 
     public function getH()
@@ -61,7 +51,16 @@ Class Game
 
     public function playGame()
     {
-        $this->painter->startInfo($this->liquid, $this->constantMotion, $this->complexity);
+       try {
+           $db = Db::getInstance();
+           $winners = $db->getWinners();
+       } catch (PDOException $e){
+           die ('Exception: '.$e->getMessage());
+       }
+        $this->painter->startInfo($this->liquid, $this->constantMotion, $this->getComplexity());
+        if(!empty($winners)){
+            $this->painter->drawResults($winners);
+        }
         $kea = $this->listener->controlUserAction(array(ENTER_KEY, SPACE_KEY));
         if ($kea == SPACE_KEY) {
             $this->painter->editSettingWall();
@@ -96,19 +95,19 @@ Class Game
                     break;
             }
         }
-        $this->painter->drawInfoField($this->gamer->getX(), $this->gamer->getY(), $this->gamer->getCounter(), $this->liquid, $this->constantMotion, $this->complexity);
+        $this->painter->drawInfoField($this->gamer->getX(), $this->gamer->getY(), $this->gamer->getCounter(), $this->liquid, $this->constantMotion, $this->getComplexity());
+        $this->characters = [];
         for ($i = 0; $i < $this->complexity * 2; $i++) {
             $this->characters[] = ($i < $this->complexity) ? CharacterFactory::create("CharacterPursue") : CharacterFactory::create("CharacterRand");
         }
         $this->painter->drawField($this->h, $this->w, $this->gamer, $this->characters);
         $flag = '';
         while (true) {
-//            if ($this->constantMotion){
+            if ($this->constantMotion){
                 $kea = $this->listener->controlUserAction(array(ListenerNcurses::RIGHT_KEY, ListenerNcurses::LEFT_KEY, ListenerNcurses::UP_KEY, ListenerNcurses::DOWN_KEY, EXIT_KEY), true);
-//            } else {
-//                $kea = $this->listener->controlUserAction(array(ListenerNcurses::RIGHT_KEY, ListenerNcurses::LEFT_KEY, ListenerNcurses::UP_KEY, ListenerNcurses::DOWN_KEY, EXIT_KEY));
-//            }
-
+            } else {
+                $kea = $this->listener->controlUserAction(array(ListenerNcurses::RIGHT_KEY, ListenerNcurses::LEFT_KEY, ListenerNcurses::UP_KEY, ListenerNcurses::DOWN_KEY, EXIT_KEY));
+            }
             switch ($kea) {
                 case EXIT_KEY:
                     break 2;
@@ -149,12 +148,50 @@ Class Game
                         }
                     }
             }
-
             foreach ($this->characters as $character) {
                 $character->moveCharacter($this->h, $this->w, $this->gamer->getX(), $this->gamer->getY());
             }
-            echo $flag;
             $this->painter->drawField($this->h, $this->w, $this->gamer, $this->characters);
+            $this->painter->drawInfoField($this->gamer->getX(), $this->gamer->getY(), $this->gamer->getCounter(), $this->liquid, $this->constantMotion, $this->getComplexity());
+            foreach ($this->characters as $character) {
+                if ($character->getX() == $this->gamer->getX() AND $character->getY() == $this->gamer->getY()) {
+                    ncurses_clear();
+                    $this->painter->gameOver();
+                    $keyList = [13];
+                    for ($i = 48; $i < 58; $i++) {
+                        $keyList[] = $i;
+                    }
+                    for ($i = 65; $i < 91; $i++) {
+                        $keyList[] = $i;
+                    }
+                    for ($i = 97; $i < 123; $i++) {
+                        $keyList[] = $i;
+                    }
+                    $keys = [];
+                    while (true) {
+                        $this->painter->echoUserName();
+                        $key = $this->listener->controlUserAction($keyList);
+                        if ($key != 13) {
+                            $keys[] = chr($key);
+                        }
+                        if ($key == 13 OR count($keys) >= 20){
+                            $name = implode('', $keys);
+                            break 3;
+                        }
+                    }
+                }
+            }
         }
+
+        try {
+            $db->savePlayer($name,$this->gamer->getCounter());
+            $winners = $db->getWinners();
+        } catch (PDOException $e){
+            die ('Exception: '.$e->getMessage());
+        }
+
+        $db = NULL;
+        $this->painter->drawResults($winners);
+        $this->listener->controlUserAction();
     }
 }

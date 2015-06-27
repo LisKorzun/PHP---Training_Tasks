@@ -1,9 +1,9 @@
 Training Tasks
 =================================
 
-BRANCH:
 
-task-01  -  "Buy elephant"
+=================================
+BRANCH: task-01  -  "Buy elephant"
 =================================
 
 Task:
@@ -15,9 +15,9 @@ Solution:
 
 https://github.com/LisKorzun/PHP---Training_Tasks/blob/task-01/Task_01/elephant.php
 
-BRANCH:
 
-task-02  -  "Calendar"
+=================================
+BRANCH: task-02  -  "Calendar"
 =================================
 
 Task:
@@ -32,9 +32,9 @@ ScreenShot:
 
 https://yadi.sk/i/LpyttUQigXyUh
 
-BRANCH:
 
-task-03  -  "Game"
+=================================
+BRANCH: task-03  -  "Game"
 =================================
 
 Task:
@@ -49,11 +49,14 @@ Task:
 Каждый тип отображается новым цветом и новым символом.
 На один ход игрока ( передвижение на одну клетку ) - в любом режиме - делается ход каждого персонажа
 Если персонажи оказываются в одной клетке с игроком - игрок погибает. Игра останавливается.
+В конце игры запросить имя пользователя и сохранить его и число шагов которые он сделал до проигрыша/конца игры.
+Статистику нужно показать в виде таблицы при запуске игры ( как заставку ) и в конце после ввода имени пользователя.
+Данные нужно сохранять в базе SQLite. Файл базы должен лежать в папке с самой игрой. Нормально должно обрабатываться отсутсвие файла (он должен создаваться заново).
 
 Solution:
 
 https://github.com/LisKorzun/PHP---Training_Tasks/blob/task-03/Task_03/game.php
 
-ScreenShot:
+Video:
 
-https://yadi.sk/i/Yr61CV9Fh3SJF
+[![ScreenShot](https://github.com/LisKorzun/PHP---Training_Tasks/tree/task-03/Task_03/img/game_php_ncurses.png)](https://youtu.be/3d5WrZZNL10)

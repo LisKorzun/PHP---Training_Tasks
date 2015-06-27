@@ -1,7 +1,7 @@
 #!/usr/bin/php5
 <?php
 
-define("H_INFO_FIELD", 10);
+define("H_INFO_FIELD", 11);
 define("W_INFO_FIELD", 48);
 
 define("EXIT_KEY", 27);
@@ -11,10 +11,6 @@ define("TWO_KEY", 50);
 define("THREE_KEY", 51);
 define("ENTER_KEY", 13);
 define("SPACE_KEY", 32);
-define("LEFT_KEY", 37);
-define("UP_KEY", 38);
-define("RIGHT_KEY", 39);
-define("DOWN_KEY", 40);
 
 define("XRIGHT", 'xRight');
 define("XLEFT", 'xLeft');

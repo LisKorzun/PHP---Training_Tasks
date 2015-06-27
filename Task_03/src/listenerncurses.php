@@ -7,19 +7,17 @@ Class ListenerNcurses implements Listener
     const UP_KEY = NCURSES_KEY_UP;
     const DOWN_KEY = NCURSES_KEY_DOWN;
 
-    public function controlUserAction(array $keyForControl, $params = false)
+    public function controlUserAction(array $keyForControl = [], $nonBlock = false)
     {
         $pressedKea = NULL;
-        while (true) {
-            $pressed = ($params == true) ? $this->getch_nonblock(1000000) : ncurses_getch();
-                foreach($keyForControl as $kea){
-                    if ($pressed == $kea){
-                        $pressedKea = $kea;
-                        break 2;
-                    }
-                }
+        $pressed = ($nonBlock == true) ? $this->getch_nonblock(1000000) : ncurses_getch();
+        foreach ($keyForControl as $kea) {
+            if ($pressed == $kea) {
+                $pressedKea = $kea;
+                break;
+            }
         }
-        return $pressedKea;
+        return empty($keyForControl) ? $pressed : $pressedKea;
     }
 
     /**
