@@ -55,7 +55,7 @@ Task:
 
 Solution:
 
-https://github.com/LisKorzun/PHP---Training_Tasks/blob/task-03/Task_03
+https://github.com/LisKorzun/PHP---Training_Tasks/tree/task-03
 
 Video:
 
@@ -73,7 +73,7 @@ Task:
 
 Solution:
 
-https://github.com/LisKorzun/PHP---Training_Tasks/blob/task-04/Task_04
+https://github.com/LisKorzun/PHP---Training_Tasks/tree/task-04
 
 ScreenShot:
 
