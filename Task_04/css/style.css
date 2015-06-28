@@ -1,0 +1,38 @@
+table {
+    width: 400px;
+    border: 1px dotted black;
+}
+
+th, td {
+    width: 50px;
+    text-align: center;
+    border: 1px dotted black;
+}
+
+tr:last-child, tr:nth-child(6) {
+    background-color: #5bc0de;
+    color: white;
+    font-weight: bold;
+}
+
+a {
+    display: inline-block;
+    text-decoration: none;
+    padding: 10px;
+    border: 1px solid black;
+    border-radius: 5px;
+    background-color: #5bc0de;
+}
+
+a:hover {
+    text-decoration: none;
+    background-color: #5bc0de;
+    color: red;
+    border: 1px solid red;
+}
+
+span {
+    font-size: large;
+    font-weight: bold;
+    color: #589fbf;
+}
