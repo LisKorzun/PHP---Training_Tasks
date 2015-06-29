@@ -1,12 +1,14 @@
 table {
+    margin: 0 auto;
     width: 400px;
     border: 1px dotted black;
+    color: #5d5d5d;
 }
 
 th, td {
     width: 50px;
     text-align: center;
-    border: 1px dotted black;
+    border: 1px dotted #5D5D5D;
 }
 
 tr:last-child, tr:nth-child(6) {
@@ -15,11 +17,15 @@ tr:last-child, tr:nth-child(6) {
     font-weight: bold;
 }
 
+h3{
+   color: #5D5D5D;
+}
+
 a {
     display: inline-block;
     text-decoration: none;
     padding: 10px;
-    border: 1px solid black;
+    border: 1px solid #5D5D5D;
     border-radius: 5px;
     background-color: #5bc0de;
 }
@@ -35,4 +41,13 @@ span {
     font-size: large;
     font-weight: bold;
     color: #589fbf;
+}
+#calendar{
+    border: 1px solid #5D5D5D;
+    border-radius: 5px;
+    padding: 10px;
+    width: 45%;
+    float: left;
+    text-align: center;
+    margin: 10px;
 }

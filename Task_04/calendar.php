@@ -4,11 +4,10 @@
     <meta charset="utf-8">
     <title>Calendar</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.css">
-    <link rel="stylesheet" href="css/style.css"
-    ">
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-<div class="container" align="center">
+<div class="container">
     <?php
 
     $today = getdate();
@@ -107,12 +106,15 @@
     {
         static $calendarNumber = 0;
         $calendarNumber++;
+        $daysOfWeek = ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'];
         $html = '';
+        $html .= '<div id = "calendar">';
         $html .= getHeaderHtml(getMonth($calendarNumber), getYear($calendarNumber), $calendarNumber);
         $week = getMonthInArray($calendarNumber);
         $html .= "<table>";
         for ($j = 0; $j < 7; $j++) {
             $html .= "<tr>";
+            $html .= "<td>". $daysOfWeek[$j]."</td>";
             for ($i = 0; $i < count($week); $i++) {
                 if (!empty($week[$i][$j])) {
                     if ($j == 5 || $j == 6)
@@ -123,6 +125,7 @@
             $html .= "</tr>";
         }
         $html .= "</table>";
+        $html .= '</div>';
         return $html;
     }
 
