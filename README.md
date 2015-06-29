@@ -24,4 +24,4 @@ https://github.com/LisKorzun/PHP---Training_Tasks/tree/task-03/Task_03
 
 Video:
 
-[![ScreenShot](https://github.com/LisKorzun/PHP---Training_Tasks/blob/task-03/Task_03/img/game_php_ncurses.png)](https://youtu.be/3d5WrZZNL10)
+[![ScreenShot](https://github.com/LisKorzun/PHP---Training_Tasks/blob/task-03/Task_03/img/game_php_ncurses.png)](https://youtu.be/Utnoq-KWFWc)

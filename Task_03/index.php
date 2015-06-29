@@ -12,6 +12,10 @@ define("THREE_KEY", 51);
 define("ENTER_KEY", 13);
 define("SPACE_KEY", 32);
 
+define("COUNTER_FOR_APPEARANCE_CHARACTER", 10);
+define("CHARACTER_BLUE", 3);
+define("CHARACTER_RED", 2);
+
 define("XRIGHT", 'xRight');
 define("XLEFT", 'xLeft');
 define("YUP", 'yUp');

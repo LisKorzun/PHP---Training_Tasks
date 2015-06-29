@@ -2,8 +2,9 @@
 
 Class CharacterPursue implements Character
 {
-    public $x;
-    public $y;
+    private $x;
+    private $y;
+    private $color = CHARACTER_RED;
 
     public function __construct()
     {
@@ -19,6 +20,11 @@ Class CharacterPursue implements Character
     public function getY()
     {
         return $this->y;
+    }
+
+    public function getColor()
+    {
+        return $this->color;
     }
 
     public function moveCharacter($h, $w, $gamerX, $gamerY)

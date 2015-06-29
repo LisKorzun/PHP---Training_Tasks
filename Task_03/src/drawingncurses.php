@@ -20,6 +20,9 @@ Class DrawingNcurses implements Drawing
             ncurses_init_pair(1, NCURSES_COLOR_GREEN, NCURSES_COLOR_BLACK);
             ncurses_init_pair(2, NCURSES_COLOR_RED, NCURSES_COLOR_BLACK);
             ncurses_init_pair(3, NCURSES_COLOR_BLUE, NCURSES_COLOR_BLACK);
+            ncurses_init_pair(4, NCURSES_COLOR_YELLOW, NCURSES_COLOR_BLACK);
+            ncurses_init_pair(5, NCURSES_COLOR_WHITE, NCURSES_COLOR_BLACK);
+            ncurses_init_pair(6, NCURSES_COLOR_BLACK, NCURSES_COLOR_BLACK);
         }
     }
 
@@ -38,12 +41,12 @@ Class DrawingNcurses implements Drawing
         ncurses_wcolor_set($this->infoField, 3);
         ncurses_wborder($this->infoField, 0, 0, 0, 0, 0, 0, 0, 0);
         ncurses_mvwaddstr($this->infoField, 1, 2, 'Добро пожаловать!');
-        ncurses_mvwaddstr($this->infoField, 2, 2, 'Активен режим:');
-        ncurses_mvwaddstr($this->infoField, 3, 2, $wall . ' и ' . $motion);
-        ncurses_mvwaddstr($this->infoField, 4, 2, 'Уровень сложности: ' . $complexity);
-        ncurses_mvwaddstr($this->infoField, 5, 2, 'Управляйте персонажем стрелками');
-        ncurses_mvwaddstr($this->infoField, 6, 2, 'Для старта нажмите "ENTER"');
-        ncurses_mvwaddstr($this->infoField, 7, 2, 'Для редактирования настроек нажмите "ПРОБЕЛ"');
+        ncurses_mvwaddstr($this->infoField, 3, 2, 'Активен режим:');
+        ncurses_mvwaddstr($this->infoField, 4, 2, $wall . ' и ' . $motion);
+        ncurses_mvwaddstr($this->infoField, 5, 2, 'Уровень сложности: ' . $complexity);
+        ncurses_mvwaddstr($this->infoField, 6, 2, 'Управляйте персонажем стрелками');
+        ncurses_mvwaddstr($this->infoField, 7, 2, 'Для старта нажмите "ENTER"');
+        ncurses_mvwaddstr($this->infoField, 8, 2, 'Для редактирования настроек нажмите "ПРОБЕЛ"');
         $this->refreshField($this->infoField);
     }
 
@@ -54,7 +57,8 @@ Class DrawingNcurses implements Drawing
         ncurses_mvwaddstr($this->infoField, 2, 11, 'Выберите режим стен:');
         ncurses_mvwaddstr($this->infoField, 4, 11, '0 - твердые стены');
         ncurses_mvwaddstr($this->infoField, 5, 11, '1 - проход сквозь стены');
-        ncurses_wrefresh($this->infoField);
+        $this->refreshField($this->infoField);
+        ncurses_color_set (6);
     }
 
     public function editSettingMotion()
@@ -63,7 +67,7 @@ Class DrawingNcurses implements Drawing
         ncurses_mvwaddstr($this->infoField, 2, 11, 'Выберите режим движения:');
         ncurses_mvwaddstr($this->infoField, 4, 11, '0 - перемещение по нажатию');
         ncurses_mvwaddstr($this->infoField, 5, 11, '1 - постоянное движение');
-        ncurses_wrefresh($this->infoField);
+        $this->refreshField($this->infoField);
     }
 
     public function editSettingComplexity()
@@ -73,7 +77,7 @@ Class DrawingNcurses implements Drawing
         ncurses_mvwaddstr($this->infoField, 4, 11, '1 - легкий');
         ncurses_mvwaddstr($this->infoField, 5, 11, '2 - средний');
         ncurses_mvwaddstr($this->infoField, 6, 11, '3 - трудный');
-        ncurses_wrefresh($this->infoField);
+        $this->refreshField($this->infoField);
     }
 
     public function drawInfoField($x, $y, $n, $liquid, $constantMotion, $complexity)
@@ -98,11 +102,14 @@ Class DrawingNcurses implements Drawing
         $paddingTop = (($this->hScreen - $h) + H_INFO_FIELD) / 2;
         $paddingLeft = ($this->wScreen - $w) / 2;
         $this->field = ncurses_newwin($h, $w, $paddingTop, $paddingLeft);
-        ncurses_wcolor_set($this->field, 1);
+        ncurses_wcolor_set($this->field, 5);
         ncurses_wborder($this->field, 0, 0, 0, 0, 0, 0, 0, 0);
+        ncurses_wcolor_set($this->field, 1);
         $this->fillField($this->field, $h, $w, '.');
+        ncurses_wcolor_set($this->field, 4);
         ncurses_mvwaddstr($this->field, $gamer->getY(), $gamer->getX(), '@');
         foreach ($characters as $character){
+            ncurses_wcolor_set($this->field, $character->getColor());
             ncurses_mvwaddstr($this->field, $character->getY(), $character->getX(), '*');
         }
         $this->refreshField($this->field);
@@ -121,7 +128,7 @@ Class DrawingNcurses implements Drawing
     }
 
     public function drawResults(array $result = []){
-        $this->winnerField = ncurses_newwin(H_INFO_FIELD, W_INFO_FIELD, ($this->hScreen - H_INFO_FIELD) / 2, ($this->wScreen - W_INFO_FIELD) / 2);
+        $this->winnerField = ncurses_newwin(H_INFO_FIELD, W_INFO_FIELD, ($this->hScreen - H_INFO_FIELD + 3) / 2, ($this->wScreen - W_INFO_FIELD) / 2);
         ncurses_wcolor_set($this->winnerField, 3);
         ncurses_wborder($this->winnerField, 0, 0, 0, 0, 0, 0, 0, 0);
         $this->fillField($this->winnerField, H_INFO_FIELD - 1, W_INFO_FIELD - 1, ' ');
@@ -139,7 +146,7 @@ Class DrawingNcurses implements Drawing
 
     public function gameOver($h, $w, $liquid, $constantMotion, $complexity)
     {
-        $gameOverField = ncurses_newwin(H_INFO_FIELD, W_INFO_FIELD, ($this->hScreen - H_INFO_FIELD) / 2, ($this->wScreen - W_INFO_FIELD) / 2);
+        $gameOverField = ncurses_newwin(H_INFO_FIELD, W_INFO_FIELD, ($this->hScreen - H_INFO_FIELD + 3) / 2, ($this->wScreen - W_INFO_FIELD) / 2);
         ncurses_wcolor_set($gameOverField, 2);
         ncurses_wborder($gameOverField, 0, 0, 0, 0, 0, 0, 0, 0);
         $this->fillField($gameOverField, H_INFO_FIELD - 1, W_INFO_FIELD - 1, ' ');
@@ -152,7 +159,7 @@ Class DrawingNcurses implements Drawing
     public function echoUserName()
     {
         static $counter = 0;
-        $y = ($this->hScreen - H_INFO_FIELD) / 2 + 6;
+        $y = ($this->hScreen - H_INFO_FIELD) / 2 + 8;
         $x = ($this->wScreen - W_INFO_FIELD) / 2 + 30;
         ncurses_move ($y,$x + $counter);
         ncurses_color_set (3);

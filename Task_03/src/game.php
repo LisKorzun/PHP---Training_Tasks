@@ -103,6 +103,12 @@ Class Game
         $this->painter->drawField($this->h, $this->w, $this->gamer, $this->characters);
         $flag = '';
         while (true) {
+            static $tensCounter = COUNTER_FOR_APPEARANCE_CHARACTER;
+            if ($this->gamer->getCounter() == $tensCounter){
+                $tensCounter = $tensCounter + COUNTER_FOR_APPEARANCE_CHARACTER;
+                $rand = rand(1,2);
+                $this->characters[] = ($rand == 1) ? CharacterFactory::create("CharacterPursue") : CharacterFactory::create("CharacterRand");
+            }
             if ($this->constantMotion){
                 $kea = $this->listener->controlUserAction(array(ListenerNcurses::RIGHT_KEY, ListenerNcurses::LEFT_KEY, ListenerNcurses::UP_KEY, ListenerNcurses::DOWN_KEY, EXIT_KEY), true);
             } else {
@@ -184,7 +190,7 @@ Class Game
         }
 
         try {
-            $db->savePlayer($name,$this->gamer->getCounter());
+            $db->savePlayer($name, $this->gamer->getCounter());
             $winners = $db->getWinners();
         } catch (PDOException $e){
             die ('Exception: '.$e->getMessage());

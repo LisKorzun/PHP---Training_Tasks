@@ -4,6 +4,7 @@ Class CharacterRand implements Character
 {
     private $x;
     private $y;
+    private $color = CHARACTER_BLUE;
 
     public function __construct()
     {
@@ -19,6 +20,11 @@ Class CharacterRand implements Character
     public function getY()
     {
         return $this->y;
+    }
+
+    public function getColor()
+    {
+        return $this->color;
     }
 
     public function moveCharacter($h, $w, $gamerX, $gamerY)
