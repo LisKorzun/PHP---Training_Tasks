@@ -1,0 +1,27 @@
+body{
+    font-family: "Helvetica Neue Light", "Lucida Grande", "Calibri", "Arial", sans-serif;
+    font-size: large;
+    align-content: center;
+}
+
+p{
+    font-size: 50px;
+    color: cadetblue;
+}
+
+table{
+    border: 3px solid cadetblue;
+    width: 800px;
+}
+
+td, th{
+    width: 200px;
+    border: 1px dotted cadetblue;
+    padding: 5px;
+}
+
+th{
+    font-size: 30px;
+    align-content: center;
+    color: cadetblue;
+}
