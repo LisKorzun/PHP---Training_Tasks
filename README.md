@@ -15,4 +15,4 @@ https://github.com/LisKorzun/PHP---Training_Tasks/tree/task-05
 
 ScreenShot:
 
-[![ScreenShot](https://github.com/LisKorzun/PHP---Training_Tasks/blob/task-05/Task_05/img/Table-Tree.png)](https://yadi.sk/i/hyaJRlfkhtjHi)
+[![ScreenShot](https://github.com/LisKorzun/PHP---Training_Tasks/blob/task-05/task_05/img/Table-Tree.png)](https://yadi.sk/i/hyaJRlfkhtjHi)
