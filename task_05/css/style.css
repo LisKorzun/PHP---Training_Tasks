@@ -25,3 +25,10 @@ th{
     align-content: center;
     color: cadetblue;
 }
+
+button.add {
+    color: darkslategrey;
+    background-color: cadetblue;
+    border: 1px dotted darkslategrey;
+    border-radius: 5px;
+}

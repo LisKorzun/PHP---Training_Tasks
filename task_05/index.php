@@ -5,6 +5,7 @@
     <title>Table-Tree</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.css">
     <link rel="stylesheet" href="css/style.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 </head>
 <body>
 <div class="container">
@@ -18,46 +19,46 @@
         if (count($role) > 1){
              $rowSpan = scanArray($role, $rowRole);
         }
-        $html .=  '<tr><td rowspan="'.$rowRole.'">'.$role['title'];
-        $html .=  "</td>";
+        $html .=  '<tr><td rowspan="'.$rowRole.'" class = "role">'.$role['title'];
+        $html .=  " <button class='add'>+</button></td>";
         if(isset ($role['groups'])){
             foreach($role['groups'] as $keyGroup => $group) {
                 $rowGroup = 0;
                 scanArray($group, $rowGroup);
                 if ($keyGroup ===0){
-                    $html .=  '<td rowspan="'.$rowGroup.'">'.$group['title'];
-                    $html .=  "</td>";
+                    $html .=  '<td rowspan="'.$rowGroup.'" class = "group">'.$group['title'];
+                    $html .=  " <button class='add'>+</button></td>";
                     if (isset($group['options'])){
                         foreach($group['options'] as $keyOption => $option) {
                             $rowOption = 0;
                             scanArray($option, $rowOption);
                             if ($keyOption === 0) {
-                                $html .= '<td rowspan="' . $rowOption . '">' . $option['title'];
-                                $html .= "</td>";
+                                $html .= '<td rowspan="' . $rowOption . '" class = "option">' . $option['title'];
+                                $html .= " <button class='add'>+</button></td>";
                                 if (isset($option['resources'])){
                                     foreach($option['resources'] as $keyResource=> $resource) {
                                         $rowResource = 0;
                                         scanArray($resource, $rowResource);
                                         if ($keyResource === 0) {
-                                            $html .= '<td rowspan="' . $rowResource . '">' . $resource['title'];
+                                            $html .= '<td rowspan="' . $rowResource . '" class = "resource">' . $resource['title'];
                                             $html .= "</td>";
                                         } else{
-                                            $html .= '<tr><td rowspan="' . $rowResource . '">' . $resource['title'];
+                                            $html .= '<tr><td rowspan="' . $rowResource . '" class = "resource">' . $resource['title'];
                                             $html .= "</td></tr>";
                                         }
                                     }
                                 }
                             } else {
-                                $html .= '<tr><td rowspan="' . $rowOption . '">' . $option['title']. "</td>";
+                                $html .= '<tr><td rowspan="' . $rowOption . '" class = "option">' . $option['title']. " <button class='add'>+</button></td>";
                                 if (isset($option['resources'])){
                                     foreach($option['resources'] as $keyResource=> $resource) {
                                         $rowResource = 0;
                                         scanArray($resource, $rowResource);
                                         if ($keyResource === 0) {
-                                            $html .= '<td rowspan="' . $rowResource . '">' . $resource['title'];
+                                            $html .= '<td rowspan="' . $rowResource . '" class = "resource">' . $resource['title'];
                                             $html .= "</td>";
                                         } else{
-                                            $html .= '<tr><td rowspan="' . $rowResource . '">' . $resource['title'];
+                                            $html .= '<tr><td rowspan="' . $rowResource . '" class = "resource">' . $resource['title'];
                                             $html .= "</td></tr>";
                                         }
                                     }
@@ -67,38 +68,38 @@
                         }
                     }
                 } else {
-                    $html .=  '<tr><td rowspan="'.$rowGroup.'">'.$group['title'].'</td>';
+                    $html .=  '<tr><td rowspan="'.$rowGroup.'" class = "group">'.$group['title']." <button class='add'>+</button></td>";
                     if (isset($group['options'])){
                         foreach($group['options'] as $keyOption => $option) {
                             $rowOption = 0;
                             scanArray($option, $rowOption);
                             if ($keyOption === 0) {
-                                $html .= '<td rowspan="' . $rowOption . '">' . $option['title'];
-                                $html .= "</td>";
+                                $html .= '<td rowspan="' . $rowOption . '" class = "option">' . $option['title'];
+                                $html .= " <button class='add'>+</button></td>";
                                 if (isset($option['resources'])){
                                     foreach($option['resources'] as $keyResource=> $resource) {
                                         $rowResource = 0;
                                         scanArray($resource, $rowResource);
                                         if ($keyResource === 0) {
-                                            $html .= '<td rowspan="' . $rowResource . '">' . $resource['title'];
+                                            $html .= '<td rowspan="' . $rowResource . '" class = "resource">' . $resource['title'];
                                             $html .= "</td>";
                                         }else{
-                                            $html .= '<tr><td rowspan="' . $rowResource . '">' . $resource['title'];
+                                            $html .= '<tr><td rowspan="' . $rowResource . '" class = "resource">' . $resource['title'];
                                             $html .= "</td></tr>";
                                         }
                                     }
                                 }
                             } else {
-                                $html .= '<tr><td rowspan="' . $rowOption . '">' . $option['title']. "</td>";
+                                $html .= '<tr><td rowspan="' . $rowOption . '" class = "option">' . $option['title']. " <button class='add'>+</button></td>";
                                 if (isset($option['resources'])){
                                     foreach($option['resources'] as $keyResource=> $resource) {
                                         $rowResource = 0;
                                         scanArray($resource, $rowResource);
                                         if ($keyResource === 0) {
-                                            $html .= '<td rowspan="' . $rowResource . '">' . $resource['title'];
+                                            $html .= '<td rowspan="' . $rowResource . '" class = "resource">' . $resource['title'];
                                             $html .= "</td>";
                                         }else{
-                                            $html .= '<tr><td rowspan="' . $rowResource . '">' . $resource['title'];
+                                            $html .= '<tr><td rowspan="' . $rowResource . '" class = "resource">' . $resource['title'];
                                             $html .= "</td></tr>";
                                         }
                                     }
@@ -133,5 +134,7 @@
     }
     ?>
 </div>
+
+<script src="js/script.js"></script>
 </body>
 </html>
