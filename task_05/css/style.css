@@ -4,7 +4,7 @@ body{
     align-content: center;
 }
 
-p{
+h1{
     font-size: 50px;
     color: cadetblue;
 }
@@ -26,9 +26,13 @@ th{
     color: cadetblue;
 }
 
-button.add {
+button.add,
+button.remove{
     color: darkslategrey;
     background-color: cadetblue;
-    border: 1px dotted darkslategrey;
-    border-radius: 5px;
+    /*border: 1px dotted darkslategrey;*/
+    /*border-radius: 5px;*/
+}
+span{
+    margin-top: 5px;
 }
