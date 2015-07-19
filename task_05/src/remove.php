@@ -11,17 +11,15 @@ if (isset($_POST['indexRole']) AND
     try {
         $file = '../data/source.json';
         $jsonArray = json_decode(file_get_contents($file), true);
-
         if ($indexGroup == 'no') {
-            unset($jsonArray['roles'][$indexRole]);
+            array_splice($jsonArray['roles'],$indexRole, 1);
         } elseif ($indexOption == 'no') {
-            unset($jsonArray['roles'][$indexRole]['groups'][$indexGroup]);
+            array_splice($jsonArray['roles'][$indexRole]['groups'], $indexGroup, 1);
         } elseif ($indexResource == 'no'){
-            unset($jsonArray['roles'][$indexRole]['groups'][$indexGroup]['options'][$indexOption]);
+            array_splice($jsonArray['roles'][$indexRole]['groups'][$indexGroup]['options'],$indexOption, 1);
         } else{
-            unset($jsonArray['roles'][$indexRole]['groups'][$indexGroup]['options'][$indexOption]['resources'][$indexResource]);
+            array_splice($jsonArray['roles'][$indexRole]['groups'][$indexGroup]['options'][$indexOption]['resources'],$indexResource, 1);
         }
-
         $json = json_encode($jsonArray);
         file_put_contents($file, json_encode($jsonArray));
     } catch (Exception $e){

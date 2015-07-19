@@ -118,7 +118,6 @@ $(document).ready(function() {
                 break;
         }
         indexRole = $( "td.role" ).index( $tdRole );
-
         $.ajax({
             type: "POST",
             url: "src/remove.php",
