@@ -1,4 +1,5 @@
 <?php
+
 if (isset($_POST['indexRole']) AND
     isset($_POST['indexGroup']) AND
     isset($_POST['indexOption']) AND
